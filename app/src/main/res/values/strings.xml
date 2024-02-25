@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Rick and Morty</string>
+    <string name="my_ricky_and_morty_challenge">My Rick and Morty Challenge</string>
+    <string name="search">Search</string>
+    <!-- MESSAGES ERROR-->
+    <string name="error_service">An error has occurred</string>
+    <!-- BUTTONBAR-->
+    <string name="label_character">CHARACTER</string>
+    <string name="label_location">LOCATION</string>
+    <string name="label_episode">EPISODE</string>
+
+</resources>
