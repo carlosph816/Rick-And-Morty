@@ -23,7 +23,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
-class PhotosUseCaseTest {
+class CharactersUseCaseTest {
     private val mockWebServer = MockWebServer()
     private val mockRetrofit = mockWebServer.getMockRetrofit().create(ApiService::class.java)
 
