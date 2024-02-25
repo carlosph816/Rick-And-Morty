@@ -18,6 +18,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.After
 import org.junit.Assert
 import org.junit.Test
 import java.util.concurrent.TimeUnit
@@ -257,5 +258,89 @@ class CharactersUseCaseTest {
         }
     }
 
+    @Test
+    fun `get all characters error returned`() {
+        mockWebServer.enqueueEntity(responseReferee, 400)
+        runBlocking {
+            val charactersResponse = rickRepositoryImpl.getDataCharacters().last()
+            val characterRequest = mockWebServer.takeRequest(1, TimeUnit.SECONDS)
+            Assert.assertEquals(
+                "/character",
+                characterRequest?.path
+            )
+            Assert.assertEquals(
+                DataState.Error(
+                    exception = R.string.error_service,
+                    errorCode = 0
+                ),charactersResponse
+            )
+        }
+    }
+
+
+    @Test
+    fun `get all locations error returned`() {
+        mockWebServer.enqueueEntity(responseReferee, 400)
+        runBlocking {
+            val locationsResponse = rickRepositoryImpl.getDataLocations().last()
+            val characterRequest = mockWebServer.takeRequest(1, TimeUnit.SECONDS)
+            Assert.assertEquals(
+                "/location",
+                characterRequest?.path
+            )
+            Assert.assertEquals(
+                DataState.Error(
+                    exception = R.string.error_service,
+                    errorCode = 0
+                ),locationsResponse
+            )
+        }
+    }
+
+    @Test
+    fun `get all episodes error returned`() {
+        mockWebServer.enqueueEntity(responseReferee, 400)
+        runBlocking {
+            val episodesResponse = rickRepositoryImpl.getDataEpisodes().last()
+            val characterRequest = mockWebServer.takeRequest(1, TimeUnit.SECONDS)
+            Assert.assertEquals(
+                "/episode",
+                characterRequest?.path
+            )
+            Assert.assertEquals(
+                DataState.Error(
+                    exception = R.string.error_service,
+                    errorCode = 0
+                ),episodesResponse
+            )
+        }
+    }
+
+    @Test
+    fun `get characters by type error `() {
+        mockWebServer.enqueueEntity(responseReferee, 500)
+        runBlocking {
+            val episodeResponse = rickRepositoryImpl.getDataCharactersByType(type, value).last()
+            val episodeRequest = mockWebServer.takeRequest(1, TimeUnit.SECONDS)
+
+            val actualPath = episodeRequest?.path?.substringBefore("?") ?: ""
+
+            Assert.assertEquals(
+                "/character",
+                actualPath
+            )
+            Assert.assertEquals(
+                DataState.Error(
+                    exception = R.string.error_service,
+                    errorCode = 0
+                ),episodeResponse
+            )
+        }
+    }
+
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
+    }
 
 }
