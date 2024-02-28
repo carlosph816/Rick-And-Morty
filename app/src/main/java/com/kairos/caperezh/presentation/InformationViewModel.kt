@@ -11,6 +11,7 @@ import com.kairos.caperezh.common.Filter
 import com.kairos.caperezh.common.Gender
 import com.kairos.caperezh.common.Status
 import com.kairos.caperezh.common.TypeInformation
+import com.kairos.caperezh.data.response.Info
 import com.kairos.caperezh.data.response.Result
 import com.kairos.caperezh.domain.CharactersUseCaseImpl
 import com.kairos.caperezh.domain.EpisodesUseCaseImpl
@@ -52,6 +53,8 @@ class InformationViewModel @Inject constructor(
     var showLoader by mutableStateOf(false)
         private set
 
+    var info: Info? = null
+
     fun setTypeInformation(type: TypeInformation) {
         typeInformation = type
         when (type) {
@@ -69,14 +72,36 @@ class InformationViewModel @Inject constructor(
         }
     }
 
-    internal fun getCharactersInformation() = viewModelScope.launch {
+    private fun getCharactersInformation() = viewModelScope.launch {
         charactersUserCaseImpl.getCharacters().collect { response ->
             showLoader = response is DataState.Loading
             when (response) {
                 is DataState.Success -> {
                     clearLists()
-                    myGlobalList.addAll(response.data?.character ?: emptyList())
-                    myViewList.addAll(response.data?.character ?: emptyList())
+                    myGlobalList.addAll(response.data?.results ?: emptyList())
+                    myViewList.addAll(response.data?.results ?: emptyList())
+                    info = response.data?.info
+                    getPaginationNumber()
+                }
+
+                is DataState.Error -> {
+                    _viewState.value = ViewState.Error(response.errorCode)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    internal fun getInformationByPage(page: Int, type: Pages) = viewModelScope.launch {
+        charactersUserCaseImpl.getCharactersByPage(page, type).collect { response ->
+            showLoader = response is DataState.Loading
+            when (response) {
+                is DataState.Success -> {
+                    clearLists()
+                    myGlobalList.addAll(response.data?.results ?: emptyList())
+                    myViewList.addAll(response.data?.results ?: emptyList())
+                    info = response.data?.info
                 }
 
                 is DataState.Error -> {
@@ -110,8 +135,8 @@ class InformationViewModel @Inject constructor(
             when (response) {
                 is DataState.Success -> {
                     clearLists()
-                    myGlobalList.addAll(response.data?.character ?: emptyList())
-                    myViewList.addAll(response.data?.character ?: emptyList())
+                    myGlobalList.addAll(response.data?.results ?: emptyList())
+                    myViewList.addAll(response.data?.results ?: emptyList())
                 }
 
                 is DataState.Error -> {
@@ -131,6 +156,7 @@ class InformationViewModel @Inject constructor(
                     clearLists()
                     myGlobalList.addAll(response.data?.results ?: emptyList())
                     myViewList.addAll(response.data?.results ?: emptyList())
+                    info = response.data?.info
                 }
 
                 is DataState.Error -> {
@@ -148,8 +174,9 @@ class InformationViewModel @Inject constructor(
             when (response) {
                 is DataState.Success -> {
                     clearLists()
-                    myGlobalList.addAll(response.data?.character ?: emptyList())
-                    myViewList.addAll(response.data?.character ?: emptyList())
+                    myGlobalList.addAll(response.data?.results ?: emptyList())
+                    myViewList.addAll(response.data?.results ?: emptyList())
+                    info = response.data?.info
                 }
 
                 is DataState.Error -> {
@@ -229,9 +256,34 @@ class InformationViewModel @Inject constructor(
             }
         }
     }
+
+
+
+    fun getPaginationNumber(): Pair<Int?, Int?>{
+        val before: Int? = if(info?.prev == null){
+            1
+        }else{
+            val result = info?.prev?.split("=")
+            result?.get(1)?.toInt()
+        }
+
+        val after: Int? = if(info?.next == null){
+            1
+        }else{
+            val result = info?.next?.split("=")
+            result?.get(1)?.toInt()
+        }
+        return Pair(before, after)
+    }
 }
 
 sealed class ViewState {
     object Success : ViewState()
     data class Error(val message: Int) : ViewState()
+}
+
+enum class Pages{
+    CHARACTERS,
+    LOCATIONS,
+    EPISODES
 }

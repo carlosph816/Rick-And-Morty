@@ -13,10 +13,16 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -27,21 +33,36 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import com.kairos.caperezh.data.response.Result
 import com.kairos.caperezh.presentation.InformationViewModel
 import com.kairos.caperezh.presentation.episodes.GridItemCardEpisodes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailCharacterView(
+    navController: NavHostController,
     data: Result?,
-    viewModel: InformationViewModel = hiltViewModel()
-){
-    LaunchedEffect(true){
+    viewModel: InformationViewModel = hiltViewModel(),
+) {
+    LaunchedEffect(true) {
         viewModel.getEpisodesById(data?.episode as List<String>)
     }
     val myList: List<Result> = viewModel.myDetailEpisodesList
-    Column (horizontalAlignment = Alignment.CenterHorizontally){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        TopAppBar(
+            title = {
+                Text(text = "Rick And Morty")
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                }
+            }
+        )
         Card(
             modifier = Modifier
                 .padding(16.dp)
@@ -61,7 +82,10 @@ fun DetailCharacterView(
                     model = data?.image,
                     contentDescription = "Translated description of what the image contains"
                 )
-                Text(text = data?.status.toString(), style = TextStyle(fontWeight = FontWeight.Bold))
+                Text(
+                    text = data?.status.toString(),
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = data?.name.toString(), style = TextStyle(fontWeight = FontWeight.Bold))
                 Spacer(modifier = Modifier.height(4.dp))
@@ -74,15 +98,18 @@ fun DetailCharacterView(
                 .padding(16.dp)
                 .fillMaxSize()
         ) {
-            Column (
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
-            ){
+            ) {
                 Text(text = "Gender", style = TextStyle(fontWeight = FontWeight.Bold))
-                Text(text = data?.gender.toString(), style = TextStyle(fontWeight = FontWeight.Normal))
+                Text(
+                    text = data?.gender.toString(),
+                    style = TextStyle(fontWeight = FontWeight.Normal)
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Divider(
                     color = Color.Gray,
@@ -116,7 +143,7 @@ fun DetailCharacterView(
                                 .align(Alignment.Center)
                                 .padding(20.dp)
                         )
-                    }else{
+                    } else {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(1),
                             modifier = Modifier

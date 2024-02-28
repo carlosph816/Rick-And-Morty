@@ -11,10 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -25,12 +31,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.kairos.caperezh.data.response.Result
 import com.kairos.caperezh.presentation.InformationViewModel
 import com.kairos.caperezh.presentation.characters.GridItemCardCharacter
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailEpisodeView(
+    navController: NavHostController,
     data: Result?,
     viewModel: InformationViewModel = hiltViewModel()
 ){
@@ -39,6 +48,18 @@ fun DetailEpisodeView(
         viewModel.getCharactersById(data?.characters!!)
     }
     Column (horizontalAlignment = Alignment.CenterHorizontally){
+        TopAppBar(
+            title = {
+                Text(text = "Rick And Morty")
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = null)
+                }
+            }
+        )
         Card(
             modifier = Modifier
                 .padding(16.dp)

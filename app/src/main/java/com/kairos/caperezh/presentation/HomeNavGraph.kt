@@ -28,7 +28,8 @@ fun HomeNavGraph(
         startDestination = RoutesButtonBar.CHARACTER
     ) {
         composable(route = RoutesButtonBar.CHARACTER) {
-            CharacterView(navigateToDetail = {
+            CharacterView(
+                navigateToDetail = {
                 showArrow()
                 val gson: Gson = GsonBuilder().create()
                 val userJson = gson.toJson(it.toDetail())
@@ -61,8 +62,8 @@ fun HomeNavGraph(
                 ))
             })
         }
-        charactersGraph()
-        locationsGraph()
-        episodesGraph()
+        charactersGraph(navController =  navController)
+        locationsGraph(navController =  navController)
+        episodesGraph(navController =  navController)
     }
 }

@@ -2,9 +2,7 @@ package com.kairos.caperezh
 
 import com.kairos.caperezh.common.DataState
 import com.kairos.caperezh.data.RemoteDataSourceImpl
-import com.kairos.caperezh.data.model.CharactersModel
-import com.kairos.caperezh.data.model.EpisodesModel
-import com.kairos.caperezh.data.model.LocationsModel
+import com.kairos.caperezh.data.model.ItemsModel
 import com.kairos.caperezh.data.response.GenericResponse
 import com.kairos.caperezh.data.response.Info
 import com.kairos.caperezh.data.response.Location
@@ -31,40 +29,7 @@ class CharactersUseCaseTest {
     private val rickRepositoryImpl =  RemoteDataSourceImpl(mockRetrofit)
 
     private var characterInfoAdapter = moshi.adapter(GenericResponse::class.java)
-    private var modelCharacter = CharactersModel(
-        info = Info(
-            count = 234,
-            pages = 32,
-            next ="https://rickandmortyapi.com/api/character/?page=2",
-            prev = ""
-        ),
-        character = listOf(Result(
-            created = "",
-            episode = "",
-            residents = listOf(""),
-            characters = listOf(""),
-            gender = "",
-            id = 1,
-            image = "",
-            location = Location(
-                name = "",
-                url = ""
-            ),
-            name = "",
-            origin = Origin(
-                name = "",
-                url = ""
-            ),
-            species = "",
-            status = "",
-            type = "",
-            url = "",
-            dimension = "",
-            air_date = ""
-        ))
-    )
-
-    private var modelLocation = LocationsModel(
+    private var modelInformation = ItemsModel(
         info = Info(
             count = 234,
             pages = 32,
@@ -97,38 +62,6 @@ class CharactersUseCaseTest {
         ))
     )
 
-    private var modelEpisode = EpisodesModel(
-        info = Info(
-            count = 234,
-            pages = 32,
-            next ="https://rickandmortyapi.com/api/character/?page=2",
-            prev = ""
-        ),
-        character = listOf(Result(
-            created = "",
-            episode = "",
-            residents = listOf(""),
-            characters = listOf(""),
-            gender = "",
-            id = 1,
-            image = "",
-            location = Location(
-                name = "",
-                url = ""
-            ),
-            name = "",
-            origin = Origin(
-                name = "",
-                url = ""
-            ),
-            species = "",
-            status = "",
-            type = "",
-            url = "",
-            dimension = "",
-            air_date = ""
-        ))
-    )
 
     private var listEpisodes = listOf(Result(
         created = "",
@@ -208,7 +141,7 @@ class CharactersUseCaseTest {
                 "/character",
                 characterRequest?.path
             )
-            Assert.assertEquals(DataState.Success(modelCharacter), charactersResponse)
+            Assert.assertEquals(DataState.Success(modelInformation), charactersResponse)
         }
     }
 
@@ -222,7 +155,7 @@ class CharactersUseCaseTest {
                 "/location",
                 locationRequest?.path
             )
-            Assert.assertEquals(DataState.Success(modelLocation), locationsResponse)
+            Assert.assertEquals(DataState.Success(modelInformation), locationsResponse)
         }
     }
 
@@ -236,7 +169,7 @@ class CharactersUseCaseTest {
                 "/episode",
                 episodeRequest?.path
             )
-            Assert.assertEquals(DataState.Success(modelEpisode), episodeResponse)
+            Assert.assertEquals(DataState.Success(modelInformation), episodeResponse)
         }
     }
 
@@ -254,7 +187,7 @@ class CharactersUseCaseTest {
                 "/character",
                 actualPath
             )
-            Assert.assertEquals(DataState.Success(modelCharacter), episodeResponse)
+            Assert.assertEquals(DataState.Success(modelInformation), episodeResponse)
         }
     }
 

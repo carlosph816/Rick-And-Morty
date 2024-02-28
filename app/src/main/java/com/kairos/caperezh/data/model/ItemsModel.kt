@@ -6,7 +6,7 @@ import com.kairos.caperezh.data.response.Result
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class CharactersModel (
+data class ItemsModel (
     val info: Info,
-    val character: List<Result>
+    val results: List<Result>
 ): Parcelable

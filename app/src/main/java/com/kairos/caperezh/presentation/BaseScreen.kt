@@ -50,9 +50,11 @@ fun BaseScreen(
                 )
             }
         },
-        topBar = {
+        /*topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.app_name)) },
+                title = {
+                    Text(text = stringResource(id = R.string.app_name))
+                },
                 navigationIcon = {
                     if (showNavigationIcon.value) {
                         IconButton(onClick = {
@@ -67,7 +69,7 @@ fun BaseScreen(
                     }
                 }
             )
-        },
+        }, */
         bottomBar = { BottomBarComponent(navController = navController) }
 
     )
